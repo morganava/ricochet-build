@@ -1,3 +1,5 @@
+# standard rbm directories
+git_clones
 logs
 out
 tmp
