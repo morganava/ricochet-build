@@ -1,0 +1,16 @@
+# vim filetype:yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+version: 3.19.1
+git_url: https://github.com/protocolbuffers/protobuf.git
+git_hash: 'v[% c("version") %]'
+container:
+  use_container: 1
+
+var:
+  linux_cross: 0
+  deps:
+    - automake
+    - libtool
+
+input_files:
+  - project: container-image
