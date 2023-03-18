@@ -1,0 +1,36 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/versions/mingw-w64") %]'
+git_url: https://git.code.sf.net/p/mingw-w64/mingw-w64
+git_hash: 'v[% c("version") %]'
+tag_gpg_id: 1
+gpg_keyring: mingw-w64.gpg
+container:
+  use_container: 1
+
+var:
+  setup: |
+    mkdir -p /var/tmp/dist
+    tar -C /var/tmp/dist -xf $rootdir/[% c("build_toolchain_tarfile") %]
+    export PATH="/var/tmp/dist/mingw-w64-clang/bin:$PATH"
+    export CC=/var/tmp/dist/mingw-w64-clang/bin/[% c("var/arch") %]-w64-mingw32-clang
+    export CXX=/var/tmp/dist/mingw-w64-clang/bin/[% c("var/arch") %]-w64-mingw32-clang++
+  deps:
+    - python3-distutils
+
+input_files:
+  - project: container-image
+  - project: clang
+    name: clang
+  - project: cmake
+    name: cmake
+  - project: gcc-source
+    name: gcc-source
+  - project: llvm-project-source
+    name: llvm-project-source
+  - filename: mingw-winrt.patch
+  - filename: mingw-dwrite_3.patch
+  - filename: mingw-unknown.patch
+  - filename: mingw-uiautomationcoreapi.patch
+  - filename: mingw-windows_foundation.patch
+  - filename: libssp-Makefile
