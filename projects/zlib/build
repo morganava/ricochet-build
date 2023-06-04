@@ -1,0 +1,34 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+[% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
+
+tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
+cd /var/tmp/build/[% project %]-[% c('version') %]
+
+[% IF c("var/windows") -%]
+  make BINARY_PATH=$distdir/lib INCLUDE_PATH=$distdir/include LIBRARY_PATH=$distdir/lib -f win32/Makefile.gcc PREFIX=[% c('var/compiler_target') %]- -j[% c('num_procs') %] SHARED_MODE=1 LOC="[% c("var/CFLAGS") %] [% c("var/LDFLAGS") %]"
+  make BINARY_PATH=$distdir/lib INCLUDE_PATH=$distdir/include LIBRARY_PATH=$distdir/lib -f win32/Makefile.gcc PREFIX=[% c('var/compiler_target') %]- -j[% c('num_procs') %] SHARED_MODE=1 LOC="[% c("var/CFLAGS") %] [% c("var/LDFLAGS") %]" install
+[% ELSE -%]
+  [% IF c("var/macos") -%]
+    ln -s /var/tmp/dist/macosx-toolchain/cctools/bin/[% c('var/compiler_target') %]-libtool /var/tmp/dist/macosx-toolchain/cctools/bin/libtool
+  [% END -%]
+
+  [% IF c("var/linux") %]
+    export CC='gcc [% c("var/CFLAGS") %]'
+  [% END -%]
+
+  export CHOST=[% c("var/chost") %]
+  export AR=[% c("var/ar") %]
+  export RANLIB=[% c("var/ranlib") %]
+
+  ./configure --prefix=$distdir --static
+  make -j[% c('num_procs') %]
+  make install
+[% END -%]
+
+cd /var/tmp/dist
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
