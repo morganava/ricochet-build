@@ -1,0 +1,18 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
+cd /var/tmp/build/[% project %]-[% c('version') %]
+
+patch -p1 < "$rootdir/libdmg.patch"
+patch -p1 < "$rootdir/hmac.patch"
+cmake . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release [% c("var/cmake_opts") %]
+make -j[% c("num_procs") %]
+
+# We take only dmg and hfsplus like Mozilla does
+cp dmg/dmg hfs/hfsplus $distdir/
+cd /var/tmp/dist
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
