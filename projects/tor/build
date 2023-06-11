@@ -23,7 +23,7 @@ echo '"[% c("abbrev", { abbrev_length => 16 }) %]"' > micro-revision.i
   --with-libevent-dir="$libeventdir" --enable-static-libevent \
   --with-openssl-dir="$openssldir" --enable-static-openssl \
   --with-zlib-dir="$zlibdir" --enable-static-zlib \
-  --prefix="$distdir"
+  --prefix="$distdir" --host=[% c('var/compiler_target') %]
 
 make -j[% c('num_procs') %]
 make install
