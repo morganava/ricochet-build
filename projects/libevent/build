@@ -7,7 +7,7 @@ tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 cd /var/tmp/build/[% project %]-[% c('version') %]
 
 ./autogen.sh
-./configure --disable-shared --disable-libevent-regress --disable-samples --disable-openssl --prefix=$distdir
+./configure --disable-shared --disable-libevent-regress --disable-samples --disable-openssl --prefix=$distdir --host=[% c('var/compiler_target') %]
 
 make -j[% c('num_procs') %]
 make install
