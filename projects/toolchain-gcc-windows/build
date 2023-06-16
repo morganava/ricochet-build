@@ -51,7 +51,7 @@ popd
 mkdir -p $builddir/mingw-w64-winpthreads
 pushd $builddir/mingw-w64-winpthreads
   $rootdir/mingw-w64/mingw-w64-libraries/winpthreads/configure --prefix=$distdir/[% c("var/compiler_target") %] \
-    --host=$[% c("var/compiler_target") %] --disable-shared --enable-static
+    --host=[% c("var/compiler_target") %] --disable-shared --enable-static
   make -j [% c('num_procs') %]
   make install
 popd
