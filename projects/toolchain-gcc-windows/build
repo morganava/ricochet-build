@@ -1,10 +1,6 @@
 #!/bin/bash
 [% c('var/set_default_env') -%]
 
-# prefix=$distdir
-# arch=[% c('var/arch') %]
-# host=$arch-w64-mingw32
-
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/binutils') %]
 mv /var/tmp/dist/binutils/* $distdir/.
 PATH="$distdir/bin:$PATH"
