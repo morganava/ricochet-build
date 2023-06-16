@@ -1,36 +1,25 @@
 #!/bin/bash
 [% c('var/set_default_env') -%]
-builddir=/var/tmp/build/builddir
 
-prefix=$distdir
-arch=[% c('var/arch') %]
-host=$arch-w64-mingw32
+# prefix=$distdir
+# arch=[% c('var/arch') %]
+# host=$arch-w64-mingw32
 
-PATH="$prefix/bin:$PATH"
-
-# extract binutils source
-tar -xf [% c('input_files_by_name/binutils-source') %]
-mv binutils-[% c('var/binutils_version') %] binutils
-
-# buid binutils
-mkdir -p $builddir/binutils
-pushd $builddir/binutils
-  $rootdir/binutils/configure \
-    --prefix=$prefix --disable-shared --enable-static --with-sysroot=$prefix --target=$host \
-    --disable-multilib --enable-lto --disable-gdb --enable-deterministic-archives
-  make -j [% c('num_procs') %]
-  make install
-popd
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/binutils') %]
+mv binutils/* $distdir/.
+PATH="$distdir/bin:$PATH"
 
 # extract mingw sources
-tar -xf [% project %]-[% c('version') %].tar.gz
-mv [% project %]-[% c('version') %] [% project %]
+tar -xf [% c('input_files_by_name/mingw-w64-source') %]
+mv mingw-w64-[% c('var/versions/mingw-w64') %] mingw-w64
 
 # build headers
 mkdir -p $builddir/mingw-w64-headers
 pushd $builddir/mingw-w64-headers
-  $rootdir/[% project %]/mingw-w64-headers/configure --host=$host --prefix=$distdir/$host \
-    --with-default-msvcrt=msvcrt --enable-sdk=all --enable-idl
+  $rootdir/mingw-w64/mingw-w64-headers/configure --host=[% c("var/compiler_target") %] \
+    --prefix=$distdir/[% c("var/compiler_target") %]  --with-default-msvcrt=msvcrt \
+    --enable-sdk=all --enable-idl
+
   make install
 popd
 
@@ -41,7 +30,7 @@ mv gcc-[% c('var/versions/gcc') %] gcc
 # build gcc
 mkdir -p $builddir/gcc
 pushd $builddir/gcc
-    $rootdir/gcc/configure --prefix=$distdir --target=$host --disable-shared --enable-static \
+    $rootdir/gcc/configure --prefix=$distdir --target=[% c("var/compiler_target") %] --disable-shared --enable-static \
       --disable-multilib --enable-languages=c,c++ --disable-nls --enable-threads=posix [% c('var/x86_dwarf2') %]
     make -j [% c('num_procs') %] all-gcc
     make install-gcc
@@ -50,8 +39,10 @@ popd
 # build crt
 mkdir -p $builddir/mingw-w64-crt
 pushd $builddir/mingw-w64-crt
-  $rootdir/[% project %]/mingw-w64-crt/configure --prefix=$distdir/$host --host=$host \
-    --with-default-msvcrt=msvcrt --with-sysroot=$distdir/$host [% c('var/crt_lib') %]
+  $rootdir/mingw-w64/mingw-w64-crt/configure --prefix=$distdir/[% c("var/compiler_target") %] \
+    --host=[% c("var/compiler_target") %] --with-default-msvcrt=msvcrt \
+    --with-sysroot=$distdir/[% c("var/compiler_target") %] [% c('var/crt_lib') %]
+
   make -j [% c('num_procs') %]
   make install
 popd
@@ -59,8 +50,8 @@ popd
 # build winpthreads
 mkdir -p $builddir/mingw-w64-winpthreads
 pushd $builddir/mingw-w64-winpthreads
-  $rootdir/[% project %]/mingw-w64-libraries/winpthreads/configure --prefix=$distdir/$host \
-    --host=$host --disable-shared --enable-static
+  $rootdir/mingw-w64/mingw-w64-libraries/winpthreads/configure --prefix=$distdir/[% c("var/compiler_target") %] \
+    --host=$[% c("var/compiler_target") %] --disable-shared --enable-static
   make -j [% c('num_procs') %]
   make install
 popd
@@ -68,7 +59,7 @@ popd
 #build widl
 mkdir -p $builddir/mingw-w64/widl
 pushd $builddir/mingw-w64/widl
-  $rootdir/[% project %]/mingw-w64-tools/widl/configure --prefix=$distdir --target=$host
+  $rootdir/mingw-w64/mingw-w64-tools/widl/configure --prefix=$distdir --target=[% c("var/compiler_target") %]
   make -j [% c('num_procs') %]
   make install
 popd

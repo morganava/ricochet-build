@@ -1,16 +1,10 @@
 # vim: filetype=yaml sw=2
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
-version: '10.0.0'
-git_url: https://git.code.sf.net/p/mingw-w64/mingw-w64
-git_hash: 'v[% c("version") %]'
-tag_gpg_id: 1
-gpg_keyring: mingw-w64.gpg
+version: '[% c("var/versions/mingw-w64") %]'
 container:
   use_container: 1
 
 var:
-  binutils_version: 2.40
-  gcc_version: 12.2.0
   deps:
     - bison
     - texinfo
@@ -18,9 +12,9 @@ var:
   setup: |
     mkdir -p /var/tmp/dist
     tar -C /var/tmp/dist -xf $rootdir/[% c("build_toolchain_tarfile") %]
-    export PATH="/var/tmp/dist/mingw-w64/bin:$PATH"
-    export CC=/var/tmp/dist/mingw-w64/bin/[% c("var/arch") %]-w64-mingw32-gcc
-    export CXX=/var/tmp/dist/mingw-w64/bin/[% c("var/arch") %]-w64-mingw32-g++
+    export PATH="/var/tmp/dist/[% project %]/bin:$PATH"
+    export CC=/var/tmp/dist/[% project %]/bin/[% c("var/arch") %]-w64-mingw32-gcc
+    export CXX=/var/tmp/dist/[% project %]/bin/[% c("var/arch") %]-w64-mingw32-g++
 targets:
   windows-i686:
     var:
@@ -32,10 +26,9 @@ targets:
       crt_lib: '--enable-lib64 --disable-lib32'
 input_files:
   - project: container-image
+  - project: mingw-w64-source
+    name: mingw-w64-source
   - project: gcc-source
     name: gcc-source
-  - name: binutils-source
-    URL: https://ftp.gnu.org/gnu/binutils/binutils-[% c("var/binutils_version") %].tar.xz
-    sig_ext: sig
-    file_gpg_id: 1
-    gpg_keyring: binutils.gpg
+  - project: binutils
+    name: binutils
