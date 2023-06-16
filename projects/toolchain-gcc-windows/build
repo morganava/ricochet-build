@@ -29,7 +29,7 @@ mv [% project %]-[% c('version') %] [% project %]
 # build headers
 mkdir -p $builddir/mingw-w64-headers
 pushd $builddir/mingw-w64-headers
-  $rootdir/mingw-w64/mingw-w64-headers/configure --host=$host --prefix=$distdir/$host \
+  $rootdir/[% project %]/mingw-w64-headers/configure --host=$host --prefix=$distdir/$host \
     --with-default-msvcrt=msvcrt --enable-sdk=all --enable-idl
   make install
 popd
@@ -50,7 +50,7 @@ popd
 # build crt
 mkdir -p $builddir/mingw-w64-crt
 pushd $builddir/mingw-w64-crt
-  $rootdir/mingw-w64/mingw-w64-crt/configure --prefix=$distdir/$host --host=$host \
+  $rootdir/[% project %]/mingw-w64-crt/configure --prefix=$distdir/$host --host=$host \
     --with-default-msvcrt=msvcrt --with-sysroot=$distdir/$host [% c('var/crt_lib') %]
   make -j [% c('num_procs') %]
   make install
@@ -59,7 +59,7 @@ popd
 # build winpthreads
 mkdir -p $builddir/mingw-w64-winpthreads
 pushd $builddir/mingw-w64-winpthreads
-  $rootdir/mingw-w64/mingw-w64-libraries/winpthreads/configure --prefix=$distdir/$host \
+  $rootdir/[% project %]/mingw-w64-libraries/winpthreads/configure --prefix=$distdir/$host \
     --host=$host --disable-shared --enable-static
   make -j [% c('num_procs') %]
   make install
@@ -68,7 +68,7 @@ popd
 #build widl
 mkdir -p $builddir/mingw-w64/widl
 pushd $builddir/mingw-w64/widl
-  $rootdir/mingw-w64/mingw-w64-tools/widl/configure --prefix=$distdir --target=$host
+  $rootdir/[% project %]/mingw-w64-tools/widl/configure --prefix=$distdir --target=$host
   make -j [% c('num_procs') %]
   make install
 popd
