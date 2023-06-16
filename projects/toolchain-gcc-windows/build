@@ -36,7 +36,7 @@ popd
 
 # extract gcc source
 tar -xf [% c('input_files_by_name/gcc-source') %]
-mv gcc-[% c('var/gcc_version') %] gcc
+mv gcc-[% c('var/versions/gcc') %] gcc
 
 # build gcc
 mkdir -p $builddir/gcc
