@@ -2,7 +2,12 @@
 [% c("var/set_default_env") -%]
 
 tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.xz
-./configure --prefix=$distdir [% c('var/configure_opt') %]
+cd /var/tmp/build/[% project %]-[% c('version') %]
+
+./configure --prefix=$distdir --disable-shared --enable-static \
+        --target=[% c("var/compiler_target") %] --disable-multilib \
+        --enable-lto --disable-gdb --enable-deterministic-archives
+
 make -j[% c("num_procs") %]
 make install
 
