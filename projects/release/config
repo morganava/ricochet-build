@@ -17,5 +17,5 @@ input_files:
  - project: libdmg-hfsplus
    name: libdmg-hfsplus
    enable: '[% c("var/macos") %]'
- - filename: resources/darwin/macos_dmg
+ - filename: macos_dmg
    enable: '[% c("var/macos") %]'

@@ -22,6 +22,13 @@
     tar -C /var/tmp/dist -xf [% c('input_files_by_name/libdmg') %]
     export PATH="/var/tmp/dist/libdmg-hfsplus:$PATH"
 
+    cp -a /var/tmp/dist/ricochet-refresh/ricochet-refresh.app ./Ricochet\ Refresh.app
+    # set the background + icon locations
+    cp -r $rootdir/macos_dmg/. .
+
+    genisoimage -V Ricochet\ Refresh -D -R -apple -no-pad -o ricochet-refresh-uncompressed.dmg .
+    dmg dmg ricochet-refresh-uncompressed.dmg ricochet-refresh-[% c("version") %]-macos-[% c("var/arch") %].dmg
+
 [% END %]
 
 
