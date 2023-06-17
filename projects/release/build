@@ -27,8 +27,7 @@
     cp -r $rootdir/macos_dmg/. .
 
     genisoimage -V Ricochet\ Refresh -D -R -apple -no-pad -o ricochet-refresh-uncompressed.dmg .
-    dmg dmg ricochet-refresh-uncompressed.dmg ricochet-refresh-[% c("version") %]-macos-[% c("var/arch") %].dmg
-
+    dmg dmg ricochet-refresh-uncompressed.dmg $distdir/ricochet-refresh-[% c("version") %]-macos-[% c("var/arch") %].dmg
 [% END %]
 
 
