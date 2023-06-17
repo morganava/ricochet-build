@@ -4,10 +4,11 @@
 # windows packaging
 [% IF c("var/windows") %]
     tar -C /var/tmp/dist -xf [% c('input_files_by_name/ricochet-refresh') %]
-    pushd /var/tmp/dist
+
+    pushd /var/tmp/build
         echo [% c("version") %] > ricochet-refresh/VERSION
-        mv ricochet-refresh "Ricochet Refresh"
-        zip -r $distdir/ricochet-refresh-[% c("version") %]-windows-[% c("var/arch") %].zip "Ricochet Refresh"
+        mv /var/tmp/dist/ricochet-refresh ./Ricochet\ Refresh
+        zip -r $distdir/ricochet-refresh-[% c("version") %]-windows-[% c("var/arch") %].zip ./Ricochet\ Refresh
     popd
 [% END %]
 
@@ -22,12 +23,14 @@
     tar -C /var/tmp/dist -xf [% c('input_files_by_name/libdmg-hfsplus') %]
     export PATH="/var/tmp/dist/libdmg-hfsplus:$PATH"
 
-    cp -a /var/tmp/dist/ricochet-refresh/ricochet-refresh.app ./Ricochet\ Refresh.app
-    # set the background + icon locations
-    cp -r $rootdir/macos_dmg/. .
+    pushd /var/tmp/build
+        cp -a /var/tmp/dist/ricochet-refresh/ricochet-refresh.app ./Ricochet\ Refresh.app
+        # set the background + icon locations
+        cp -r $rootdir/macos_dmg/. .
 
-    genisoimage -V Ricochet\ Refresh -D -R -apple -no-pad -o ricochet-refresh-uncompressed.dmg .
-    dmg dmg ricochet-refresh-uncompressed.dmg $distdir/ricochet-refresh-[% c("version") %]-macos-[% c("var/arch") %].dmg
+        genisoimage -V Ricochet\ Refresh -D -R -apple -no-pad -o ricochet-refresh-uncompressed.dmg .
+        dmg dmg ricochet-refresh-uncompressed.dmg $distdir/ricochet-refresh-[% c("version") %]-macos-[% c("var/arch") %].dmg
+    popd
 [% END %]
 
 
