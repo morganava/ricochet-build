@@ -7,7 +7,7 @@ container:
 targets:
   macos:
     var:
-      arch_dep:
+      arch_deps:
         - genisoimage
 
 input_files:
