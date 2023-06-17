@@ -26,3 +26,10 @@ ricochet-macos-x86_64:
 
 ricochet-macos-aarch64:
 	./rbm/rbm build ricochet-refresh --target macos --target macos-aarch64
+
+ricochet-release:
+	./rbm/rbm build release --target linux --target linux-i686
+	./rbm/rbm build release --target linux --target linux-x86_64
+	./rbm/rbm build release --target windows --target windows-i686
+	./rbm/rbm build release --target windows --target windows-x86_64
+	./rbm/rbm build release --target macos --target macos-x86_64
