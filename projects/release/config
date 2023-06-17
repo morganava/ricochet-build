@@ -1,0 +1,21 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/build_id") %]'
+version: '[% c("var/versions/ricochet-refresh") %]'
+container:
+  use_container: 1
+
+targets:
+  macos:
+    var:
+      arch_dep:
+        - genisoimage
+
+input_files:
+ - project: container-image
+ - project: ricochet-refresh
+   name: ricochet-refresh
+ - project: libdmg-hfsplus
+   name: libdmg-hfsplus
+   enable: '[% c("var/macos") %]'
+ - filename: resources/darwin/macos_dmg
+   enable: '[% c("var/macos") %]'
