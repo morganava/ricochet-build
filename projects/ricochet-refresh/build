@@ -140,19 +140,26 @@ RICOCHET_REFRESH_VERSION=[% c('version') %] cmake -S ../src $CMAKE_FLAGS
 
 cmake --build . -j[% c('num_procs') %]
 
+# macos target builds an entire .app directory
+[% IF c("var/macos") %]
+bindir="$distdir/ricochet-refresh.app/Contents/MacOS"
+[% ELSE %]
+bindir=$distdir
+[% END %]
+
 # build outputs
-cp -a /var/tmp/build/[% project %]-[% c('version') %]/build/ricochet-refresh/ricochet-refresh/* /var/tmp/dist/ricochet-refresh/.
+cp -a /var/tmp/build/[% project %]-[% c('version') %]/build/ricochet-refresh/ricochet-refresh/* $distdir/.
 
 # pluggable transports
 pushd /var/tmp/dist/tor-expert-bundle/tor/pluggable_transports
-    mkdir /var/tmp/dist/ricochet-refresh/pluggable_transports
+    mkdir $bindir/pluggable_transports
     for i in $(find . -type f -executable); do
-        cp $i /var/tmp/dist/ricochet-refresh/pluggable_transports/.
+        cp $i $bindir/pluggable_transports/.
     done
 popd
 
 # tor
-cp /var/tmp/dist/tor/bin/tor[% IF c("var/windows") %].exe[% END %] /var/tmp/dist/ricochet-refresh/.
+cp /var/tmp/dist/tor/bin/tor[% IF c("var/windows") %].exe[% END %] $bindir/.
 
 # license files
 cp /var/tmp/build/[% project %]-[% c('version') %]/LICENSE /var/tmp/dist/ricochet-refresh/.
