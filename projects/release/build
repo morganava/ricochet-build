@@ -6,7 +6,7 @@
     tar -C /var/tmp/dist -xf [% c('input_files_by_name/ricochet-refresh') %]
 
     pushd /var/tmp/build
-        echo [% c("version") %] > ricochet-refresh/VERSION
+        echo [% c("version") %] > /var/tmp/dist/ricochet-refresh/VERSION
         mv /var/tmp/dist/ricochet-refresh ./Ricochet\ Refresh
         zip -r $distdir/ricochet-refresh-[% c("version") %]-windows-[% c("var/arch") %].zip ./Ricochet\ Refresh
     popd
