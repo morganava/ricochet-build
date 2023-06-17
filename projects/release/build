@@ -3,14 +3,21 @@
 
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/ricochet-refresh') %]
 
+# windows packaging
 [% IF c("var/windows") %]
     pushd /var/tmp/dist
         echo [% c("version") %] > ricochet-refresh/VERSION
         mv ricochet-refresh "Ricochet Refresh"
-        zip -r ricochet.zip "Ricochet Refresh"
-        mv ricochet.zip $distdir/ricochet-refresh-[% c("version") %]-windows-[% c("var/arch") %].zip
+        zip -r $distdir/ricochet-refresh-[% c("version") %]-windows-[% c("var/arch") %].zip "Ricochet Refresh"
     popd
 [% END %]
+
+# linux packaging
+[% IF c("var/linux") %]
+    tar -cvf $distdir/ricochet-refresh-[% c("version") %]-linux-[% c("var/arch") %].tar
+    gzip -9 $distdir/ricochet-refresh-[% c("version") %]-linux-[% c("var/arch") %].tar
+[% END %]
+
 
 # make our output directory and copy outputs
 mkdir -p [% dest_dir _ '/' _ c('filename') %]
