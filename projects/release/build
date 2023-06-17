@@ -19,7 +19,7 @@
 # macos packaging
 [% IF c("var/macos") %]
     tar -C /var/tmp/dist -xf [% c('input_files_by_name/ricochet-refresh') %]
-    tar -C /var/tmp/dist -xf [% c('input_files_by_name/libdmg') %]
+    tar -C /var/tmp/dist -xf [% c('input_files_by_name/libdmg-hfsplus') %]
     export PATH="/var/tmp/dist/libdmg-hfsplus:$PATH"
 
     cp -a /var/tmp/dist/ricochet-refresh/ricochet-refresh.app ./Ricochet\ Refresh.app
