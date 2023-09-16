@@ -14,7 +14,7 @@ PKCS11_ENGINE="[% c('buildconf/signing/pkcs11_engine') %]"
 PKCS11_MOULE="[% c('buildconf/signing/pkcs11_module') %]"
 CERTS="[% c('buildconf/signing/certs') %]"
 KEY="[% c('buildconf/signing/key') %]"
-PASS="[% c('buildconf/signing/token') %]"
+PASS="$(cat [% c('buildconf/signing/pass_file') %])"
 TIMESTAMP_URL="[% c('buildconf/signing/timestamp_url') %]"
 
 # sign binary in-place
@@ -151,7 +151,7 @@ mv [% c('input_files_by_name/ricochet-refresh') %] $distdir/ricochet-refresh-${V
 [% IF c("var/macos") %]
 
 [% IF c("var/sign") %]
-# tar -C /var/tmp/dist -xf [% c('input_files_by_name/rcodesign') %]
+tar -C /var/tmp/dist -xf [% c('input_files_by_name/rcodesign') %]
 PATH=/var/tmp/dist/rcodesign/bin:$PATH
 P12_FILE="[% c('buildconf/signing/p12_file') %]"
 P12_PASSWORD_FILE="[% c('buildconf/signing/p12_password_file') %]"
@@ -173,15 +173,15 @@ notarize_staple_dmg() {
 [% ELSE %]
 sign_bundle() {
     BUNDLE=$1
-    echo "not signing ${1}"
+    echo "not signing ${BUNDLE}"
 }
 sign_dmg() {
     DMG=$1
-    echo "not signing ${1}"
+    echo "not signing ${DMG}"
 }
 notarize_staple_dmg() {
     DMG=$1
-    echo "not notarizing+stapling ${1}"
+    echo "not notarizing+stapling ${DMG}"
 }
 [% END %]
 
@@ -204,6 +204,31 @@ pushd /var/tmp/build
 popd
 [% END %]
 
+# gpg sign our build outputs
+[% IF c("var/sign") %]
+GPG_KEYRING="[% c('buildconf/signing/gpg_keyring') %]"
+GPG_PASS="$(cat [% c('buildconf/signing/gpg_password_file') %])"
+
+sign_file() {
+    FILE=$1
+    echo "$GPG_PASS" | gpg --no-default-keyring --keyring "${GPG_KEYRING}" --batch --passphrase-fd 0 -abs "${FILE}"
+}
+[% ELSE %]
+sign_file() {
+    FILE=$1
+    echo "not signing ${FILE}"
+}
+[% END %]
+
+pushd $distdir
+    for i in *
+    do
+        sign_file ${i}
+    done
+pop
+
 # make our output directory and copy outputs
 mkdir -p [% dest_dir %]/[% c("filename") %]
 cp -a $distdir/* [% dest_dir %]/[% c("filename") %]/.
+
+
