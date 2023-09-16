@@ -27,7 +27,7 @@ sign_binary() {
 sign_binary() {
     # no-op
     BINARY=$1
-    echo "not signing ${1}"
+    echo "not code-signing ${1}"
 }
 [% END %]
 
@@ -216,7 +216,7 @@ sign_file() {
 [% ELSE %]
 sign_file() {
     FILE=$1
-    echo "not signing ${FILE}"
+    echo "not pgp signing ${FILE}"
 }
 [% END %]
 
@@ -225,7 +225,7 @@ pushd $distdir
     do
         sign_file ${i}
     done
-pop
+popd
 
 # make our output directory and copy outputs
 mkdir -p [% dest_dir %]/[% c("filename") %]
