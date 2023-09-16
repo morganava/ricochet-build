@@ -22,11 +22,11 @@ popd
 # gpg sign our build outputs
 [% IF c("var/sign") %]
 GPG_KEYRING="[% c('buildconf/signing/gpg_keyring') %]"
-GPG_PASS="$(cat [% c('buildconf/signing/gpg_password_file') %])"
+GPG_PASSWORD_FILE="[% c('buildconf/signing/gpg_password_file') %]"
 
 sign_file() {
     FILE=$1
-    echo "$GPG_PASS" | gpg --no-default-keyring --keyring "${GPG_KEYRING}" --batch --passphrase-fd 0 -abs "${FILE}"
+    gpg --no-default-keyring --keyring "${GPG_KEYRING}" --batch --pinentry-mode loopback --passphrase-file "${GPG_PASSWORD_FILE}" -abs "${FILE}"
 }
 [% ELSE %]
 sign_file() {
