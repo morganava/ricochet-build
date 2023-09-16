@@ -10,7 +10,7 @@ cp [% c('input_files_by_name/macos-aarch64') %]/* [% dest_dir %]/.
 cp [% c('input_files_by_name/windows-i686') %]/* [% dest_dir %]/.
 cp [% c('input_files_by_name/windows-x86_64') %]/* [% dest_dir %]/.
 
-# calculat hshes of artifacts
+# calculate hashes of artifacts
 
 pushd [% dest_dir %]
 echo -n > sha256sums.txt
