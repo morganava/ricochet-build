@@ -20,7 +20,7 @@ TIMESTAMP_URL="[% c('buildconf/signing/timestamp_url') %]"
 # sign binary in-place
 sign_binary() {
     BINARY=$1
-    osslsigncode -pkcs11engine ${PKCS11_ENGINE} -pkcs11module ${PKCS11_MOULE} -h sha256 -certs ${CERTS} -key ${KEY} -pass ${PASS} -t ${TIMESTMP_URL} ${BINARY} ${BINARY}.signed
+    osslsigncode -pkcs11engine ${PKCS11_ENGINE} -pkcs11module ${PKCS11_MOULE} -h sha256 -certs ${CERTS} -key ${KEY} -pass ${PASS} -t ${TIMESTMP_URL} -in ${BINARY} -out ${BINARY}.signed
     mv ${BINARY}.signed ${BINARY}
 }
 [% ELSE %]
