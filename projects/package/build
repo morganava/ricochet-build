@@ -160,7 +160,7 @@ APP_STORE_CONNECT_API_KEY="[% c('buildconf/signing/app_store_connect_api_key') %
 # sign binary in-place
 sign_bundle() {
     BUNDLE=$1
-    rcodesign sign --p12-file "${P12_FILE}" --p12-password-file "${P12_PASSWORD_FILE}" "${BUNDLE}"
+    rcodesign sign --p12-file "${P12_FILE}" --p12-password-file "${P12_PASSWORD_FILE}" --code-signature-flags runtime "${BUNDLE}"
 }
 sign_dmg() {
     DMG=$1
