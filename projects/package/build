@@ -204,28 +204,6 @@ pushd /var/tmp/build
 popd
 [% END %]
 
-# gpg sign our build outputs
-[% IF c("var/sign") %]
-GPG_KEYRING="[% c('buildconf/signing/gpg_keyring') %]"
-GPG_PASS="$(cat [% c('buildconf/signing/gpg_password_file') %])"
-
-sign_file() {
-    FILE=$1
-    echo "$GPG_PASS" | gpg --no-default-keyring --keyring "${GPG_KEYRING}" --batch --passphrase-fd 0 -abs "${FILE}"
-}
-[% ELSE %]
-sign_file() {
-    FILE=$1
-    echo "not pgp signing ${FILE}"
-}
-[% END %]
-
-pushd $distdir
-    for i in *
-    do
-        sign_file ${i}
-    done
-popd
 
 # make our output directory and copy outputs
 mkdir -p [% dest_dir %]/[% c("filename") %]
