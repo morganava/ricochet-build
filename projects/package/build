@@ -96,7 +96,7 @@ cat > debian/control << EOF
 [% INCLUDE linux/deb/control.template -%]
 EOF
 
-# build .eb
+# build .deb
 dpkg-buildpackage -b --host-arch ${DEBARCH}
 popd
 
