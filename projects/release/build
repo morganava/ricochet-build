@@ -36,7 +36,6 @@ sign_file() {
 [% END %]
 
 pushd [% dest_dir %]
-echo -n > sha256sums.txt
 for file in $(ls | sort)
 do
     sign_file $file
