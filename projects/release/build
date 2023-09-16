@@ -11,11 +11,34 @@ cp [% c('input_files_by_name/windows-i686') %]/* [% dest_dir %]/.
 cp [% c('input_files_by_name/windows-x86_64') %]/* [% dest_dir %]/.
 
 # calculate hashes of artifacts
-
 pushd [% dest_dir %]
 echo -n > sha256sums.txt
 for file in $(ls | sort)
 do
     sha256sum $file >> sha256sums.txt
+done
+popd
+
+# gpg sign our build outputs
+[% IF c("var/sign") %]
+GPG_KEYRING="[% c('buildconf/signing/gpg_keyring') %]"
+GPG_PASS="$(cat [% c('buildconf/signing/gpg_password_file') %])"
+
+sign_file() {
+    FILE=$1
+    echo "$GPG_PASS" | gpg --no-default-keyring --keyring "${GPG_KEYRING}" --batch --passphrase-fd 0 -abs "${FILE}"
+}
+[% ELSE %]
+sign_file() {
+    FILE=$1
+    echo "not pgp signing ${FILE}"
+}
+[% END %]
+
+pushd [% dest_dir %]
+echo -n > sha256sums.txt
+for file in $(ls | sort)
+do
+    sign_file $file
 done
 popd
