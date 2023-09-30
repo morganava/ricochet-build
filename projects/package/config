@@ -62,6 +62,7 @@ targets:
     var:
       deps:
         - genisoimage
+        - imagemagick
   windows:
     var:
       deps:
