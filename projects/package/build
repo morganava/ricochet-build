@@ -196,6 +196,7 @@ pushd /var/tmp/build
     # generate dmg background image
     convert $rootdir/macos/background.svg -resize 415x250 $rootdir/macos/background1x.png
     convert $rootdir/macos/background.svg -resize 830x500 $rootdir/macos/background2x.png
+    mkdir .background
     convert $rootdir/macos/background1x.png $rootdir/macos/background2x.png .background/background.tiff
 
     # copy and sign app bundle
