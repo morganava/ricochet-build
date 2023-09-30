@@ -9,7 +9,6 @@ export PATH=/var/tmp/dist/cmake/bin:$PATH
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/zlib') %]
 tar -C /var/tmp/dist -xf [% c('input_files_by_name/bzip2') %]
 
-
 tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 cd /var/tmp/build/[% project %]-[% c('version') %]
 
@@ -27,8 +26,7 @@ CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release
                 -DBZIP2_LIBRARIES=/var/tmp/dist/bzip2/lib"
 
 cmake . -G "Unix Makefiles" ${CMAKE_FLAGS}
-# make -j[% c("num_procs") %]
-make SHELL='sh -x'
+make -j[% c("num_procs") %]
 
 # We take only dmg and hfsplus like Mozilla does
 cp dmg/dmg hfs/hfsplus $distdir/
