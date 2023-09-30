@@ -190,11 +190,19 @@ tar -C /var/tmp/dist -xf [% c('input_files_by_name/libdmg-hfsplus') %]
 PATH="/var/tmp/dist/libdmg-hfsplus:$PATH"
 
 pushd /var/tmp/build
-    cp -a /var/tmp/dist/ricochet-refresh/ricochet-refresh.app ./Ricochet\ Refresh.app
-    sign_bundle ./Ricochet\ Refresh.app
-    # set the background + icon locations
+    # build the dmg skeleton
     cp -r $rootdir/macos/dmg/. .
 
+    # generate dmg background image
+    convert $rootdir/macos/background.svg -resize 415x250 $rootdir/macos/background1x.png
+    convert $rootdir/macos/background.svg -resize 830x500 $rootdir/macos/background2x.png
+    convert $rootdir/macos/background1x.png $rootdir/macos/background2x.png .background/background.tiff
+
+    # copy and sign app bundle
+    cp -a /var/tmp/dist/ricochet-refresh/ricochet-refresh.app ./Ricochet\ Refresh.app
+    sign_bundle ./Ricochet\ Refresh.app
+
+    # generate and sign+notarize dmg
     genisoimage -V Ricochet\ Refresh -D -R -apple -no-pad -o ricochet-refresh-uncompressed.dmg .
     DMG="ricochet-refresh-${VERSION}-macos-${ARCH}.dmg"
     dmg dmg ricochet-refresh-uncompressed.dmg ${DMG}
