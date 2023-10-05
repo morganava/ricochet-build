@@ -5,9 +5,9 @@
 # https://dexp.in/articles/qtcreator-crosscompile/
 
 # build qt
-mkdir -p /var/tmp/build
-tar -C /var/tmp/build -xf qt-everywhere-opensource-src-[% c('version') %].tar.xz
-cd /var/tmp/build/qt-everywhere-src-[% c('version') %]
+mkdir -p $builddir
+tar -C $builddir -xf qt-everywhere-opensource-src-[% c('version') %].tar.xz
+cd $builddir/qt-everywhere-src-[% c('version') %]
 
 [% IF c("var/linux") %]
   # https://bugreports.qt.io/browse/QTBUG-104264
