@@ -9,7 +9,7 @@ make -j[% c("num_procs") %]
 make install
 ln -s gcc $projdir/bin/cc
 
-cd /var/tmp/dist
+cd $distdir
 [% c('tar', {
         tar_src => [ project ],
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
