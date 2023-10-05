@@ -1,4 +1,4 @@
 #!/bin/bash
 if [ "$1" == "--print-path" ]; then
-    echo "/var/tmp/dist/toolchain-macos-clang/Developer"
+    echo "$distdir/toolchain-macos-clang/Developer"
 fi

@@ -3,7 +3,7 @@
 
 builddir=/var/tmp/build
 
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/cmake') %]
+tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
 tar -C $projdir -xf [% c('input_files_by_name/clang') %]
 tar -C $projdir -xf [% c('input_files_by_name/SDK') %]
 tar -C $projdir -xf [% c('input_files_by_name/cctools') %]
@@ -21,7 +21,7 @@ sysrootdir=$projdir/MacOSX[% c("version") %].sdk/
 target=[% c("var/compiler_target") %]
 # We still need to put the cctoolsdir on the path. That's because of `lipo`. See
 # the respective comment in the cctools build script.
-export PATH="/var/tmp/dist/cmake/bin:$cctoolsdir:$PATH"
+export PATH="$distdir/cmake/bin:$cctoolsdir:$PATH"
 export MACOSX_DEPLOYMENT_TARGET=[% c("var/macosx_deployment_target") %]
 
 [% IF c("var/macos-aarch64") -%]
@@ -138,7 +138,7 @@ mkdir -p $projdir/Developer/Toolchains/XcodeDefault.xctoolchain
 cd $projdir/Developer/Toolchains/XcodeDefault.xctoolchain
 ln -s ../../../clang usr
 
-cd /var/tmp/dist
+cd $distdir
 [% c('tar', {
    tar_src => [ project ],
    tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
