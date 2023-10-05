@@ -2,11 +2,11 @@
 [% c("var/set_default_env") -%]
 
 builddir=/var/tmp/build/[% project %]-[% c('version') %]
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/clang') %]
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/cmake') %]
-export PATH="/var/tmp/dist/cmake/bin:$PATH"
+tar -C $distdir -xf [% c('input_files_by_name/clang') %]
+tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
+export PATH="$distdir/cmake/bin:$PATH"
 
-export CLANG_DIR=/var/tmp/dist/clang
+export CLANG_DIR=$distdir/clang
 tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 
 export CC=$CLANG_DIR/bin/clang
@@ -38,7 +38,7 @@ cmake $builddir/src/llvm \
 make -j[% c("num_procs") %] clangBasic
 make -j[% c("num_procs") %] libtapi install-libtapi install-tapi-headers
 
-cd /var/tmp/dist
+cd $distdir
 [% c('tar', {
         tar_src => [ project ],
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
