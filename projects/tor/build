@@ -12,8 +12,8 @@ zlibdir=$distdir/zlib
 tar -C $distdir -xf [% c('input_files_by_name/zlib') %]
 
 # extract tor source
-tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
-cd /var/tmp/build/[% project %]-[% c('version') %]
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]
 
 # add git hash to micro-revision.i for tor-browser#24995
 echo '"[% c("abbrev", { abbrev_length => 16 }) %]"' > micro-revision.i
