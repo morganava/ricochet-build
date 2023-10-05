@@ -5,8 +5,8 @@
 
 # NSIS requires zlib and we later set the path using ZLIB_W32.
 tar -C $distdir -xf [% c('input_files_by_name/zlib') %]
-tar -C /var/tmp/build -xf nsis-[% c('version') %].tar.bz2
-cd /var/tmp/build/nsis-[% c('version') %]-src
+tar -C $builddir -xf nsis-[% c('version') %].tar.bz2
+cd $builddir/nsis-[% c('version') %]-src
 
 # Adding --no-insert-timestamp to APPEND_LINKFLAGS is not working as it
 # is used for both the host and cross-compiled parts, but this option is
