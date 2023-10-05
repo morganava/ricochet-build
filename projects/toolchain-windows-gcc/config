@@ -6,11 +6,11 @@ container:
 
 var:
   setup: |
-    mkdir -p /var/tmp/dist
-    tar -C /var/tmp/dist -xf $rootdir/[% c("build_toolchain_tarfile") %]
-    export PATH="/var/tmp/dist/[% project %]/bin:$PATH"
-    export CC=/var/tmp/dist/[% project %]/bin/[% c("var/arch") %]-w64-mingw32-gcc
-    export CXX=/var/tmp/dist/[% project %]/bin/[% c("var/arch") %]-w64-mingw32-g++
+    mkdir -p $distdir
+    tar -C $distdir -xf $rootdir/[% c("build_toolchain_tarfile") %]
+    export PATH="$distdir/[% project %]/bin:$PATH"
+    export CC=$distdir/[% project %]/bin/[% c("var/arch") %]-w64-mingw32-gcc
+    export CXX=$distdir/[% project %]/bin/[% c("var/arch") %]-w64-mingw32-g++
   deps:
     - bison
     - texinfo
