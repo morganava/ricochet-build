@@ -40,7 +40,7 @@ popd
 tar -C $distdir -xf [% c('input_files_by_name/nsis') %]
 PATH=$distdir/nsis/bin:$PATH
 
-pushd /var/tmp/build
+pushd $builddir
 # build installer
 cp -a $distdir/ricochet-refresh/* .
 cp $rootdir/windows/nsis/* .
@@ -61,7 +61,7 @@ popd
 #
 [% IF c("var/linux") %]
 tar -C $distdir -xf [% c('input_files_by_name/ricochet-refresh') %]
-pushd /var/tmp/build
+pushd $builddir
 
 #
 # build deb
@@ -189,7 +189,7 @@ tar -C $distdir -xf [% c('input_files_by_name/ricochet-refresh') %]
 tar -C $distdir -xf [% c('input_files_by_name/libdmg-hfsplus') %]
 PATH="$distdir/libdmg-hfsplus:$PATH"
 
-pushd /var/tmp/build
+pushd $builddir
     # build the dmg skeleton
     cp -r $rootdir/macos/dmg/. .
 
