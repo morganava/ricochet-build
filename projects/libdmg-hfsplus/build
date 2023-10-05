@@ -9,8 +9,8 @@ export PATH=$distdir/cmake/bin:$PATH
 tar -C $distdir -xf [% c('input_files_by_name/zlib') %]
 tar -C $distdir -xf [% c('input_files_by_name/bzip2') %]
 
-tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
-cd /var/tmp/build/[% project %]-[% c('version') %]
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]
 
 patch -p1 < "$rootdir/libdmg.patch"
 patch -p1 < "$rootdir/hmac.patch"
