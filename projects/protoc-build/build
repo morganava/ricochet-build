@@ -5,7 +5,7 @@ tar -C /var/tmp/build -xf $rootdir/[% c("input_files_by_name/protobuf") %]
 # copy the bin dir out into our output
 mv /var/tmp/build/protobuf/bin $projdir/.
 
-cd /var/tmp/dist
+cd $distdir
 mv protoc-build protoc
 [% c('tar', {
         tar_src => protoc,
