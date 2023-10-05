@@ -1,13 +1,13 @@
 #!/bin/bash
 [% c("var/set_default_env") -%]
 
-builddir=/var/tmp/build/[% project %]-[% c('version') %]
+builddir=$builddir/[% project %]-[% c('version') %]
 tar -C $distdir -xf [% c('input_files_by_name/clang') %]
 tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
 export PATH="$distdir/cmake/bin:$PATH"
 
 export CLANG_DIR=$distdir/clang
-tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
 
 export CC=$CLANG_DIR/bin/clang
 export CXX=$CLANG_DIR/bin/clang++
