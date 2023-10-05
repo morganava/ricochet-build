@@ -6,8 +6,8 @@
 tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
 export PATH="$distdir/cmake/bin:$PATH"
 
-tar -C /var/tmp/build -xf $rootdir/[% c("input_files_by_name/protobuf-source") %]
-cd /var/tmp/build/protobuf-source-[% c('version') %]
+tar -C $builddir -xf $rootdir/[% c("input_files_by_name/protobuf-source") %]
+cd $builddir/protobuf-source-[% c('version') %]
 
 
 # Build with CMake, as it exposes the CMake modules for tego
