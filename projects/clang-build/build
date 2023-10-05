@@ -1,8 +1,8 @@
 #!/bin/bash
 [% c("var/set_default_env") -%]
 
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/cmake') %]
-export PATH="/var/tmp/dist/cmake/bin:$PATH"
+tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
+export PATH="$distdir/cmake/bin:$PATH"
 
 cd /var/tmp/build
 tar -xf $rootdir/[% c('input_files_by_name/llvm-project-source') %]
@@ -25,7 +25,7 @@ cmake ../llvm -G "Unix Makefiles" \
 
 make -j[% c("num_procs") %] install
 
-cd /var/tmp/dist
+cd $distdir
 mv clang-build clang
 [% c('tar', {
         tar_src => clang,
