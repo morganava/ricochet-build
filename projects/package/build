@@ -31,18 +31,18 @@ sign_binary() {
 }
 [% END %]
 
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/ricochet-refresh') %]
-pushd /var/tmp/dist/ricochet-refresh
+tar -C $distdir -xf [% c('input_files_by_name/ricochet-refresh') %]
+pushd $distdir/ricochet-refresh
 # sign each of our binaries
 find . -type f -executable -print0 | while IFS= read -r -d '' bin; do sign_binary "$bin"; done
 popd
 
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/nsis') %]
-PATH=/var/tmp/dist/nsis/bin:$PATH
+tar -C $distdir -xf [% c('input_files_by_name/nsis') %]
+PATH=$distdir/nsis/bin:$PATH
 
 pushd /var/tmp/build
 # build installer
-cp -a /var/tmp/dist/ricochet-refresh/* .
+cp -a $distdir/ricochet-refresh/* .
 cp $rootdir/windows/nsis/* .
 makensis -DMUI_VERSION="${VERSION}" windows-installer.nsi
 # sign installer
@@ -50,7 +50,7 @@ sign_binary ricochet-refresh-installer.exe
 mv ricochet-refresh-installer.exe "$projdir/ricochet-refresh-${VERSION}-windows-${ARCH}-installer.exe"
 
 # portable zip
-cp -a /var/tmp/dist/ricochet-refresh ./Ricochet\ Refresh
+cp -a $distdir/ricochet-refresh ./Ricochet\ Refresh
 rm ./Ricochet\ Refresh/LICENSE
 zip -r "$projdir/ricochet-refresh-${VERSION}-windows-${ARCH}.zip" ./Ricochet\ Refresh
 popd
@@ -60,7 +60,7 @@ popd
 # Linux packaging
 #
 [% IF c("var/linux") %]
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/ricochet-refresh') %]
+tar -C $distdir -xf [% c('input_files_by_name/ricochet-refresh') %]
 pushd /var/tmp/build
 
 #
@@ -74,7 +74,7 @@ cp -a $rootdir/linux/deb/debian .
 mkdir -p debian/ricochet-refresh/opt
 
 # copy in ricochet-refresh binaries
-cp -a /var/tmp/dist/ricochet-refresh debian/ricochet-refresh/opt/ricochet_refresh
+cp -a $distdir/ricochet-refresh debian/ricochet-refresh/opt/ricochet_refresh
 
 # generate icons
 for size in 16 24 32 48 64 96 128 192 256 512 1024
@@ -114,7 +114,7 @@ linuxdeploy="$rootdir/[% c('input_files_by_name/linuxdeploy') %]"
 chmod +x $linuxdeploy
 
 mkdir -p AppDir/usr/bin
-cp -a /var/tmp/dist/ricochet-refresh/* AppDir/usr/bin/.
+cp -a $distdir/ricochet-refresh/* AppDir/usr/bin/.
 
 
 # copy icon
@@ -151,8 +151,8 @@ mv [% c('input_files_by_name/ricochet-refresh') %] $projdir/ricochet-refresh-${V
 [% IF c("var/macos") %]
 
 [% IF c("var/sign") %]
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/rcodesign') %]
-PATH=/var/tmp/dist/rcodesign/bin:$PATH
+tar -C $distdir -xf [% c('input_files_by_name/rcodesign') %]
+PATH=$distdir/rcodesign/bin:$PATH
 P12_FILE="[% c('buildconf/signing/p12_file') %]"
 P12_PASSWORD_FILE="[% c('buildconf/signing/p12_password_file') %]"
 APP_STORE_CONNECT_API_KEY="[% c('buildconf/signing/app_store_connect_api_key') %]"
@@ -185,9 +185,9 @@ notarize_staple_dmg() {
 }
 [% END %]
 
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/ricochet-refresh') %]
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/libdmg-hfsplus') %]
-PATH="/var/tmp/dist/libdmg-hfsplus:$PATH"
+tar -C $distdir -xf [% c('input_files_by_name/ricochet-refresh') %]
+tar -C $distdir -xf [% c('input_files_by_name/libdmg-hfsplus') %]
+PATH="$distdir/libdmg-hfsplus:$PATH"
 
 pushd /var/tmp/build
     # build the dmg skeleton
@@ -200,7 +200,7 @@ pushd /var/tmp/build
     convert $rootdir/macos/background1x.png $rootdir/macos/background2x.png .background/background.tiff
 
     # copy and sign app bundle
-    cp -a /var/tmp/dist/ricochet-refresh/ricochet-refresh.app ./Ricochet\ Refresh.app
+    cp -a $distdir/ricochet-refresh/ricochet-refresh.app ./Ricochet\ Refresh.app
     sign_bundle ./Ricochet\ Refresh.app
 
     # generate and sign+notarize dmg
