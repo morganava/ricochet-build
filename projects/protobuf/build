@@ -3,8 +3,8 @@
 
 [% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
 
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/cmake') %]
-export PATH="/var/tmp/dist/cmake/bin:$PATH"
+tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
+export PATH="$distdir/cmake/bin:$PATH"
 
 tar -C /var/tmp/build -xf $rootdir/[% c("input_files_by_name/protobuf-source") %]
 cd /var/tmp/build/protobuf-source-[% c('version') %]
@@ -42,7 +42,7 @@ cmake -E env LDFLAGS="[% c("var/LDFLAGS") %]" \
 cmake --build . -j[% c('num_procs') %]
 cmake --build . --target install
 
-cd /var/tmp/dist
+cd $distdir
 [% c('tar', {
         tar_src => [ project ],
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
