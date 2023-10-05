@@ -1,7 +1,7 @@
 #!/bin/bash
 [% c("var/set_default_env") -%]
 
-builddir=/var/tmp/build
+builddir=$builddir
 
 tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
 tar -C $projdir -xf [% c('input_files_by_name/clang') %]
