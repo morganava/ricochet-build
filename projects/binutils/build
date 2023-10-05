@@ -1,8 +1,8 @@
 #!/bin/bash
 [% c("var/set_default_env") -%]
 
-tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.xz
-cd /var/tmp/build/[% project %]-[% c('version') %]
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.xz
+cd $builddir/[% project %]-[% c('version') %]
 
 ./configure --prefix=$projdir --disable-shared --enable-static \
         --target=[% c("var/compiler_target") %] --disable-multilib \
