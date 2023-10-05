@@ -4,12 +4,12 @@
 [% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
 
 # extract dependencies
-libeventdir=/var/tmp/dist/libevent
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/libevent') %]
-openssldir=/var/tmp/dist/openssl
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/openssl') %]
-zlibdir=/var/tmp/dist/zlib
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/zlib') %]
+libeventdir=$distdir/libevent
+tar -C $distdir -xf [% c('input_files_by_name/libevent') %]
+openssldir=$distdir/openssl
+tar -C $distdir -xf [% c('input_files_by_name/openssl') %]
+zlibdir=$distdir/zlib
+tar -C $distdir -xf [% c('input_files_by_name/zlib') %]
 
 # extract tor source
 tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
@@ -28,7 +28,7 @@ echo '"[% c("abbrev", { abbrev_length => 16 }) %]"' > micro-revision.i
 make -j[% c('num_procs') %]
 make install
 
-cd /var/tmp/dist
+cd $distdir
 [% c('tar', {
         tar_src => [ project ],
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
