@@ -4,7 +4,7 @@
 [% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
 
 # NSIS requires zlib and we later set the path using ZLIB_W32.
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/zlib') %]
+tar -C $distdir -xf [% c('input_files_by_name/zlib') %]
 tar -C /var/tmp/build -xf nsis-[% c('version') %].tar.bz2
 cd /var/tmp/build/nsis-[% c('version') %]-src
 
@@ -33,8 +33,8 @@ patch -p1 < $rootdir/no-reloc-section.diff
         _ ' APPEND_CCFLAGS="-fgnu89-inline"'
         _ " SKIPUTILS='NSIS Menu' XGCC_W32_PREFIX=" _ c("var/compiler_target") _ "-"
         _ " TARGET_ARCH=" _ target
-        _ " ZLIB_W32=/var/tmp/dist/zlib/"
-        _ ' PREFIX=/var/tmp/dist/nsis' -%]
+        _ " ZLIB_W32=$distdir/zlib/"
+        _ ' PREFIX=$distdir/nsis' -%]
 # Parallel compilation might result in errors, but they seems to be recoverable,
 # so we first run scons in parallel, and suppress any error, then we try again,
 # but the second time they make the build fail.
@@ -42,7 +42,7 @@ scons [% scons_args %] -j[% c("num_procs") %] || true
 scons [% scons_args %]
 scons [% scons_args %] install
 
-cd /var/tmp/dist
+cd $distdir
 [% c('tar', {
         tar_src => [ project ],
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
