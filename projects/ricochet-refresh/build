@@ -15,15 +15,15 @@ tar -C $distdir -xf [% c('input_files_by_name/tor') %]
 mkdir -p $distdir/tor-expert-bundle
 tar -C $distdir/tor-expert-bundle -xf $rootdir/[% c('input_files_by_name/tor-expert-bundle') %]
 
-tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
-cd /var/tmp/build/[% project %]-[% c('version') %]/
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]/
 
 
 # Generate the pluggables header
 # 1. create a QMap<String, std::vector<std::string>> mapping bridge type strings (ie obfs4, snowflake, etc) to lists of bridge lines
 PT_CONFIG=$distdir/tor-expert-bundle/tor/pluggable_transports/pt_config.json
 
-PT_HEADER_PATH=/var/tmp/build/[% project %]-[% c('version') %]/src/libtego_ui/pluggables.hpp
+PT_HEADER_PATH=$builddir/[% project %]-[% c('version') %]/src/libtego_ui/pluggables.hpp
 touch $PT_HEADER_PATH
 echo "#pragma once" > $PT_HEADER_PATH
 echo "const QMap<QString, std::vector<std::string>> defaultBridges {" >> $PT_HEADER_PATH
@@ -50,7 +50,7 @@ recommended_bridge_type="\"$(jq -r .recommendedDefault $PT_CONFIG)\"";
 echo "const QString recommendedBridgeType = ${recommended_bridge_type};" >> $PT_HEADER_PATH
 
 # Generate the torrc header
-TORRC_HEADER_PATH=/var/tmp/build/[% project %]-[% c('version') %]/src/libtego/source/torrc.hpp
+TORRC_HEADER_PATH=$builddir/[% project %]-[% c('version') %]/src/libtego/source/torrc.hpp
 echo "#pragma once" > $TORRC_HEADER_PATH
 # 1. get the number of pluggable transport bins
 PT_COUNT=$(jq '.pluggableTransports | length' $PT_CONFIG)
@@ -64,7 +64,7 @@ echo "};" >> $TORRC_HEADER_PATH
 cat $TORRC_HEADER_PATH
 
 # generate src tar
-pushd /var/tmp/build
+pushd $builddir
 [% c('tar', {
         tar_src => project _ '-' _ c('version'),
         tar_args => '-czf ' _ dest_dir _ '/src-' _ c('filename'),
@@ -148,7 +148,7 @@ bindir=$projdir
 [% END %]
 
 # build outputs
-cp -a /var/tmp/build/[% project %]-[% c('version') %]/build/ricochet-refresh/ricochet-refresh/* $projdir/.
+cp -a $builddir/[% project %]-[% c('version') %]/build/ricochet-refresh/ricochet-refresh/* $projdir/.
 
 # pluggable transports
 pushd $distdir/tor-expert-bundle/tor/pluggable_transports
@@ -162,7 +162,7 @@ popd
 cp $distdir/tor/bin/tor[% IF c("var/windows") %].exe[% END %] $bindir/.
 
 # license files
-cp /var/tmp/build/[% project %]-[% c('version') %]/LICENSE $distdir/ricochet-refresh/.
+cp $builddir/[% project %]-[% c('version') %]/LICENSE $distdir/ricochet-refresh/.
 
 cd $distdir
 [% c('tar', {
