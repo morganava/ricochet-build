@@ -1,10 +1,10 @@
 #!/bin/bash
 [% c("var/set_default_env") -%]
 
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/clang') %]
-tar -C /var/tmp/dist -xf [% c('input_files_by_name/libtapi') %]
-mv /var/tmp/dist/libtapi/* $projdir
-export CLANG_DIR=/var/tmp/dist/clang
+tar -C $distdir -xf [% c('input_files_by_name/clang') %]
+tar -C $distdir -xf [% c('input_files_by_name/libtapi') %]
+mv $distdir/libtapi/* $projdir
+export CLANG_DIR=$distdir/clang
 
 tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
 cd /var/tmp/build/[% project %]-[% c('version') %]/cctools
@@ -36,7 +36,7 @@ cp $projdir/bin/x86_64-apple-darwin-lipo $projdir/bin/lipo
     ln $i aarch64${i#x86_64}
 done)
 
-cd /var/tmp/dist
+cd $distdir
 [% c('tar', {
         tar_src => [ project ],
         tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
