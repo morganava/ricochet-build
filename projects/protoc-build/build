@@ -1,9 +1,9 @@
 !/bin/bash
 [% c("var/set_default_env") -%]
 
-tar -C /var/tmp/build -xf $rootdir/[% c("input_files_by_name/protobuf") %]
+tar -C $builddir -xf $rootdir/[% c("input_files_by_name/protobuf") %]
 # copy the bin dir out into our output
-mv /var/tmp/build/protobuf/bin $projdir/.
+mv $builddir/protobuf/bin $projdir/.
 
 cd $distdir
 mv protoc-build protoc
