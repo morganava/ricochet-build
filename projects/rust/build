@@ -4,7 +4,7 @@
 tar -C $distdir -xf [% c('input_files_by_name/rust-installer') %]
 cd $distdir/rust-[% c("version") %]-*
 
-STAGING_PATH=/var/tmp/build/rust-extract
+STAGING_PATH=$builddir/rust-extract
 ./install.sh --destdir=$STAGING_PATH
 
 mkdir -p $distdir/rust
