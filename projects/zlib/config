@@ -12,13 +12,13 @@ targets:
   linux:
     var:
       chost: x86_64-pc-linux-gnu
-      ar: /var/tmp/dist/gcc/bin/x86_64-pc-linux-gnu-gcc-ar
-      ranlib: /var/tmp/dist/gcc/bin/x86_64-pc-linux-gnu-gcc-ranlib
+      ar: $distdir/gcc/bin/x86_64-pc-linux-gnu-gcc-ar
+      ranlib: $distdir/gcc/bin/x86_64-pc-linux-gnu-gcc-ranlib
   macos:
     var:
       chost: '[% c("var/compiler_target") %]'
-      ar: '/var/tmp/dist/toolchain-macos-clang/cctools/bin/[% c("var/compiler_target") %]-ar'
-      ranlib: '/var/tmp/dist/toolchain-macos-clang/cctools/bin/[% c("var/compiler_target") %]-ranlib'
+      ar: '$distdir/toolchain-macos-clang/cctools/bin/[% c("var/compiler_target") %]-ar'
+      ranlib: '$distdir/toolchain-macos-clang/cctools/bin/[% c("var/compiler_target") %]-ranlib'
 
 input_files:
   - project: container-image
