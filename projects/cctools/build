@@ -6,8 +6,8 @@ tar -C $distdir -xf [% c('input_files_by_name/libtapi') %]
 mv $distdir/libtapi/* $projdir
 export CLANG_DIR=$distdir/clang
 
-tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
-cd /var/tmp/build/[% project %]-[% c('version') %]/cctools
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]/cctools
 
 export CC=$CLANG_DIR/bin/clang
 export CXX=$CLANG_DIR/bin/clang++
