@@ -4,7 +4,7 @@
 tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
 export PATH="$distdir/cmake/bin:$PATH"
 
-cd /var/tmp/build
+cd $builddir
 tar -xf $rootdir/[% c('input_files_by_name/llvm-project-source') %]
 
 cd llvm-project-source
