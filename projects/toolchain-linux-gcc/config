@@ -6,12 +6,12 @@ container:
 
 var:
   setup: |
-    mkdir -p /var/tmp/dist
-    tar -C /var/tmp/dist -xf $rootdir/[% c("build_toolchain_tarfile") %]
-    export PATH="/var/tmp/dist/gcc/bin:$PATH"
-    export LD_LIBRARY_PATH=/var/tmp/dist/gcc/lib64:/var/tmp/dist/gcc/lib32
-    export CC="/var/tmp/dist/gcc/bin/gcc"
-    export CXX="/var/tmp/dist/gcc/bin/g++"
+    mkdir -p $distdir
+    tar -C $distdir -xf $rootdir/[% c("build_toolchain_tarfile") %]
+    export PATH="$distdir/gcc/bin:$PATH"
+    export LD_LIBRARY_PATH=$distdir/gcc/lib64:$distdir/gcc/lib32
+    export CC="$distdir/gcc/bin/gcc"
+    export CXX="$distdir/gcc/bin/g++"
     export CFLAGS='[% c("var/CFLAGS") %]'
     export CXXFLAGS='[% c("var/CXXFLAGS") %]'
     export LDFLAGS='[% c("var/LDFLAGS") %]'
