@@ -7,7 +7,7 @@ container:
 targets:
   linux:
     var:
-      cross_compile: /var/tmp/dist/gcc/bin/x86_64-pc-linux-gnu-
+      cross_compile: $distdir/gcc/bin/x86_64-pc-linux-gnu-
       configure: -qpa xcb -xcb -xcb-xlib -feature-freetype -fontconfig -skip qtx11extras
   linux-i686:
     var:
@@ -60,12 +60,12 @@ targets:
   windows:
     var:
       xplatform: win32-clang-g++
-      cross_compile: '/var/tmp/dist/toolchain-windows-clang/bin/[% c("var/arch") %]-w64-mingw32-'
+      cross_compile: '$distdir/toolchain-windows-clang/bin/[% c("var/arch") %]-w64-mingw32-'
       configure: -no-fontconfig -no-glib -static-runtime
   macos:
     var:
       xplatform: macx-clang
-      cross_compile: /var/tmp/dist/toolchain-macos-clang/cctools/bin/[% c("var/arch") %]-apple-darwin-
+      cross_compile: $distdir/toolchain-macos-clang/cctools/bin/[% c("var/arch") %]-apple-darwin-
       configure: -no-fontconfig -no-glib
 
 input_files:
