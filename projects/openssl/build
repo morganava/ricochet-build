@@ -3,8 +3,8 @@
 
 [% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
 
-tar -C /var/tmp/build -xf [% project %]-[% c('version') %].tar.gz
-cd /var/tmp/build/[% project %]-[% c('version') %]
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]
 
 # openssl has its own special config script, so we need to let it handle
 [% IF c("var/windows") %]
