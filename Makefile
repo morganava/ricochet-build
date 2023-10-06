@@ -66,3 +66,32 @@ ricochet-release-alpha:
 
 ricochet-release-alpha-sign:
 	./rbm/rbm build release --target alpha --target sign
+
+# Dev Builds
+
+ricochet-linux-testbuild: ricochet-linux-i686-testbuild ricochet-linux-x86_64-testbuild
+
+ricochet-linux-i686-testbuild:
+	./rbm/rbm build ricochet-refresh --target linux --target linux-i686 --target testbuild
+
+ricochet-linux-x86_64-testbuild:
+	./rbm/rbm build ricochet-refresh --target linux --target linux-x86_64 --target testbuild
+
+ricochet-macos-testbuild: ricochet-macos-x86_64-testbuild ricochet-macos-aarch64-testbuild
+
+ricochet-macos-x86_64-testbuild:
+	./rbm/rbm build ricochet-refresh --target macos --target macos-x86_64 --target testbuild
+
+ricochet-macos-aarch64-testbuild:
+	./rbm/rbm build ricochet-refresh --target macos --target macos-aarch64 --target testbuild
+
+ricochet-windows-testbuild: ricochet-windows-i686-testbuild ricochet-windows-x86_64-testbuild
+
+ricochet-windows-i686-testbuild:
+	./rbm/rbm build ricochet-refresh --target windows --target windows-i686 --target testbuild
+
+ricochet-windows-x86_64-testbuild:
+	./rbm/rbm build ricochet-refresh --target windows --target windows-x86_64 --target testbuild
+
+ricochet-release-testbuild:
+	./rbm/rbm build release --target testbuild
