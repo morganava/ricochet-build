@@ -1,6 +1,6 @@
 # vim: filetype=yaml sw=2
 filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %]'
-version: '[% c("var/versions/ricochet-refresh") %]'
+version: '[% pc("ricochet-refresh", "version") %]'
 container:
   use_container: '[% !c("var/sign") %]'
 
