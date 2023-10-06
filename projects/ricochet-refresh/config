@@ -15,7 +15,7 @@ var:
 targets:
   testbuild:
     fetch: 1
-    version: 'testbuild-[% exec("git rev-parse --short HEAD") %]'
+    version: '[% c("var/versions/ricochet-refresh") %]-testbuild-[% exec("git rev-parse --short HEAD") %]'
     #git_url: /path/to/your/ricochet-refresh/.git
     git_hash: main
   linux-i686:
