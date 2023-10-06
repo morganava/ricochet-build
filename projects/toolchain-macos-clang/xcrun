@@ -5,7 +5,7 @@ if [ "$1" == "--sdk" ] && [ "$2" == "macosx" ]; then
         echo "11.0"
     fi
     if [ "$3" == "--show-sdk-path" ]; then
-        echo "$distdir/toolchain-macos-clang/Developer/SDKs/MacOSX11.0.sdk"
+        echo "/var/tmp/$(whoami)/dist/toolchain-macos-clang/Developer/SDKs/MacOSX11.0.sdk"
     fi
 fi
 
