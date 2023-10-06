@@ -23,7 +23,7 @@ TAPI_REPOSITORY=[% c("var/tapi_repository") %]
 TAPI_VERSION=[% c("var/tapi_version") %]
 INCLUDE_FIX="-I $PWD/../src/llvm/projects/clang/include -I $PWD/projects/clang/include"
 
-cmake $builddir/src/llvm \
+cmake $PWD/../src/llvm \
       -G "Unix Makefiles" \
       -DCMAKE_CXX_FLAGS="$INCLUDE_FIX" \
       -DLLVM_INCLUDE_TESTS=OFF \
