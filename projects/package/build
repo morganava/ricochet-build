@@ -71,7 +71,7 @@ DEBARCH=[% c("var/deb_arch") %]
 mkdir deb
 pushd deb
 cp -a $rootdir/linux/deb/debian .
-# prepend a mock changelog entry
+# generate a mock changelog entry for testbuilds
 [% IF c("var/testbuild") %]
 mv debian/changelog debian/changelog.bak
 cat > debian/changelog << EOF
@@ -110,7 +110,7 @@ EOF
 dpkg-buildpackage -b --host-arch ${DEBARCH}
 popd
 
-mv ricochet-refresh_${VERSION}_${DEBARCH}.deb $projdir/.
+mv *.deb $projdir/.
 
 popd # deb
 
