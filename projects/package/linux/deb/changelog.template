@@ -1,5 +1,6 @@
-ricochet-refresh ([% c("var/version") %]) unstable; urgency=medium
+ricochet-refresh ([% c("version") %]) unstable; urgency=medium
 
-  * Upgrade to Ricochet-Refresh [% c("var/version") %]
+  * Upgrade to Ricochet-Refresh [% c("version") %]
 
  -- Test Builder <test@build.er>  [% exec('date -u "+%a, %d %b %Y %H:%M:%S +0000"') %]
+
