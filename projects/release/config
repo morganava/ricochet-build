@@ -1,5 +1,5 @@
 # vim: filetype=yaml sw=2
-version: '[% c("var/versions/ricochet-refresh") %]'
+version: '[% pc("package", "version") %]'
 output_dir: '[% c("var/publish_dir", { output_dir => "." }) %]'
 container:
   use_container: 0
@@ -10,6 +10,10 @@ var:
   build: build1
 
 targets:
+  testbuild:
+    var:
+      publish_dir: 'release/[% c("var/channel") %]/[% c("var/sign_status") %]/[% c("version") %]'
+
   sign:
     var:
       sign_status: signed
