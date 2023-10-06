@@ -71,6 +71,16 @@ DEBARCH=[% c("var/deb_arch") %]
 mkdir deb
 pushd deb
 cp -a $rootdir/linux/deb/debian .
+# prepend a mock changelog entry
+[% IF c("var/testbuild") %]
+mv debian/changelog debian/changelog.bak
+cat > debian/changelog << EOF
+[% INCLUDE "linux/deb/changelog.template" -%]
+EOF
+cat debian/changelog.bak >> debian/changelog
+rm debian/changelog.bak
+[% END %]
+
 mkdir -p debian/ricochet-refresh/opt
 
 # copy in ricochet-refresh binaries
