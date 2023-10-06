@@ -13,7 +13,7 @@ var:
     - patchelf
 
 targets:
-  nightly:
+  testbuild:
     #git_url: /path/to/your/ricochet-refresh/.git
     git_hash: main
   linux-i686:
