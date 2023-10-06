@@ -110,7 +110,7 @@ EOF
 dpkg-buildpackage -b --host-arch ${DEBARCH}
 popd
 
-mv *.deb $projdir/.
+mv ricochet-refresh_${VERSION}_${DEBARCH}.deb $projdir/.
 
 popd # deb
 
