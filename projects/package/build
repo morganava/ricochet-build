@@ -82,9 +82,8 @@ cat debian/changelog.bak >> debian/changelog
 rm debian/changelog.bak
 [% END %]
 
-mkdir -p debian/ricochet-refresh/opt
-
 # copy in ricochet-refresh binaries
+mkdir -p debian/ricochet-refresh/opt
 cp -a $distdir/ricochet-refresh debian/ricochet-refresh/opt/ricochet_refresh
 
 # generate icons
