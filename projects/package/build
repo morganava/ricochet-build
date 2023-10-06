@@ -73,6 +73,7 @@ pushd deb
 cp -a $rootdir/linux/deb/debian .
 # generate a mock changelog entry for testbuilds
 [% IF c("var/testbuild") %]
+DATE=$(date -u "+%a, %d %b %Y %H:%M:%S +0000")
 mv debian/changelog debian/changelog.bak
 cat > debian/changelog << EOF
 [% INCLUDE "linux/deb/changelog.template" -%]
