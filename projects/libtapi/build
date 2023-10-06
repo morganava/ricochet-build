@@ -1,28 +1,27 @@
 #!/bin/bash
 [% c("var/set_default_env") -%]
 
-builddir=$builddir/[% project %]-[% c('version') %]
 tar -C $distdir -xf [% c('input_files_by_name/clang') %]
 tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
 export PATH="$distdir/cmake/bin:$PATH"
 
-export CLANG_DIR=$distdir/clang
 tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+cd $builddir/[% project %]-[% c('version') %]
 
+mkdir build
+cd build
+
+export CLANG_DIR=$distdir/clang
 export CC=$CLANG_DIR/bin/clang
 export CXX=$CLANG_DIR/bin/clang++
 # We also need this LD_LIBRARY_PATH at build time, since tapi builds bits of
 # clang build tools, and then executes those tools.
 export LD_LIBRARY_PATH=$CLANG_DIR/lib
 
-cd $builddir
-mkdir build
-cd build
 # Values taken from build.sh
 TAPI_REPOSITORY=[% c("var/tapi_repository") %]
 TAPI_VERSION=[% c("var/tapi_version") %]
-
-INCLUDE_FIX="-I $builddir/src/llvm/projects/clang/include -I $PWD/projects/clang/include"
+INCLUDE_FIX="-I $PWD/../src/llvm/projects/clang/include -I $PWD/projects/clang/include"
 
 cmake $builddir/src/llvm \
       -G "Unix Makefiles" \
