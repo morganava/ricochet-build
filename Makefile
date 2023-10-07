@@ -10,7 +10,7 @@ submodule-update:
 clean:
 	./rbm/container run -- rm -Rf ./tmp/rbm-*
 	rm -rf ./logs
-	rm -rf /var/tmp/$(whoami)
+	rm -rf /var/tmp/${USER}
 
 #################
 # Build Targets #
