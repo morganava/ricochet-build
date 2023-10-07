@@ -44,6 +44,7 @@ pushd $builddir
 # build installer
 cp -a $distdir/ricochet-refresh/* .
 cp $rootdir/windows/nsis/* .
+
 makensis -DMUI_VERSION="${VERSION}" windows-installer.nsi
 # sign installer
 sign_binary ricochet-refresh-installer.exe

@@ -23,10 +23,6 @@
     !define MUI_FINISHPAGE_SHOWREADME_FUNCTION "installStartMenuShortcut"
 
     !define MUI_ICON "icon.ico"
-    !define MUI_HEADERIMAGE
-    !define MUI_HEADERIMAGE_BITMAP "header.bmp"
-    !define MUI_HEADERIMAGE_BITMAP_RTL "header-rtl.bmp"
-    !define MUI_HEADERIMAGE_RIGHT
 
 ; -------------------------------------
 ; General

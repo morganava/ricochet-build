@@ -66,6 +66,7 @@ targets:
   windows:
     var:
       deps:
+        - imagemagick
         - zip
 
 input_files:
