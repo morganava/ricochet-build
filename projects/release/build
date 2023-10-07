@@ -21,8 +21,8 @@ popd
 
 # gpg sign our build outputs
 [% IF c("var/sign") %]
-GPG_KEYRING="[% c('buildconf/signing/gpg_keyring') %]"
-GPG_PASSWORD_FILE="[% c('buildconf/signing/gpg_password_file') %]"
+GPG_KEYRING="[% c('var/signing/gpg_keyring') %]"
+GPG_PASSWORD_FILE="[% c('var/signing/gpg_password_file') %]"
 
 sign_file() {
     FILE=$1
