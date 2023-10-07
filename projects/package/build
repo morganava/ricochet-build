@@ -146,7 +146,7 @@ EOF
 # build .appimage
 $linuxdeploy --appimage-extract-and-run -d ./ricochet-refresh.desktop  ${ICON_ARGS} --icon-filename=ricochet-refresh --output appimage --appdir AppDir
 
-mv Ricochet-Refresh-*${APPIMAGEARCH}.AppImage $projdir/ricochet-refresh-${VERSION}-${ARCH}.appimage
+mv Ricochet-Refresh-*${APPIMAGEARCH}.AppImage $projdir/ricochet-refresh-${VERSION}-${APPIMAGEARCH}.appimage
 
 popd # appimage
 
