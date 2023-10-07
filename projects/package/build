@@ -14,13 +14,13 @@ PKCS11_ENGINE="[% c('var/signing/pkcs11_engine') %]"
 PKCS11_MOULE="[% c('var/signing/pkcs11_module') %]"
 CERTS="[% c('var/signing/certs') %]"
 KEY="[% c('var/signing/key') %]"
-PASS="$(cat [% c('var/signing/pass_file') %])"
+PASSFILE="[% c('var/signing/pass_file') %]"
 TIMESTAMP_URL="[% c('var/signing/timestamp_url') %]"
 
 # sign binary in-place
 sign_binary() {
     BINARY=$1
-    osslsigncode -pkcs11engine ${PKCS11_ENGINE} -pkcs11module ${PKCS11_MOULE} -h sha256 -certs ${CERTS} -key ${KEY} -pass ${PASS} -t ${TIMESTAMP_URL} -in ${BINARY} -out ${BINARY}.signed
+    osslsigncode -pkcs11engine ${PKCS11_ENGINE} -pkcs11module ${PKCS11_MOULE} -h sha256 -certs ${CERTS} -key ${KEY} -readpass ${PASSFILE} -t ${TIMESTAMP_URL} -in ${BINARY} -out ${BINARY}.signed
     mv ${BINARY}.signed ${BINARY}
 }
 [% ELSE %]
