@@ -10,12 +10,12 @@ ARCH=[% c("var/arch") %]
 [% IF c("var/windows") %]
 
 [% IF c("var/sign") %]
-PKCS11_ENGINE="[% c('buildconf/signing/pkcs11_engine') %]"
-PKCS11_MOULE="[% c('buildconf/signing/pkcs11_module') %]"
-CERTS="[% c('buildconf/signing/certs') %]"
-KEY="[% c('buildconf/signing/key') %]"
-PASS="$(cat [% c('buildconf/signing/pass_file') %])"
-TIMESTAMP_URL="[% c('buildconf/signing/timestamp_url') %]"
+PKCS11_ENGINE="[% c('var/signing/pkcs11_engine') %]"
+PKCS11_MOULE="[% c('var/signing/pkcs11_module') %]"
+CERTS="[% c('var/signing/certs') %]"
+KEY="[% c('var/signing/key') %]"
+PASS="$(cat [% c('var/signing/pass_file') %])"
+TIMESTAMP_URL="[% c('var/signing/timestamp_url') %]"
 
 # sign binary in-place
 sign_binary() {
@@ -164,9 +164,9 @@ mv [% c('input_files_by_name/ricochet-refresh') %] $projdir/ricochet-refresh-${V
 [% IF c("var/sign") %]
 tar -C $distdir -xf [% c('input_files_by_name/rcodesign') %]
 PATH=$distdir/rcodesign/bin:$PATH
-P12_FILE="[% c('buildconf/signing/p12_file') %]"
-P12_PASSWORD_FILE="[% c('buildconf/signing/p12_password_file') %]"
-APP_STORE_CONNECT_API_KEY="[% c('buildconf/signing/app_store_connect_api_key') %]"
+P12_FILE="[% c('var/signing/p12_file') %]"
+P12_PASSWORD_FILE="[% c('var/signing/p12_password_file') %]"
+APP_STORE_CONNECT_API_KEY="[% c('var/signing/app_store_connect_api_key') %]"
 
 # sign binary in-place
 sign_bundle() {
