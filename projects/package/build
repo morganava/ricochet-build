@@ -1,5 +1,9 @@
 #!/bin/bash
 [% c("var/set_default_env") -%]
+[% IF c("var/sign") %]
+# disable command echo to avoid leaking passwords
+set +x
+[% END %]
 
 VERSION=[% c("version") %]
 ARCH=[% c("var/arch") %]
@@ -15,12 +19,13 @@ PKCS11_MODULE="[% c('var/signing/pkcs11_module') %]"
 CERTS="[% c('var/signing/certs') %]"
 KEY_ID="[% c('var/signing/key_id') %]"
 PKCS11_PASSFILE="[% c('var/signing/pkcs11_pass_file') %]"
+PKCS11_PASS="$(cat "${PKCS11_PASSFILE}")"
 TIMESTAMP_URL="[% c('var/signing/timestamp_url') %]"
 
 # sign binary in-place
 sign_binary() {
     BINARY=$1
-    osslsigncode -pkcs11engine ${PKCS11_ENGINE} -pkcs11module ${PKCS11_MODULE} -h sha256 -certs ${CERTS} -key ${KEY_ID} -readpass ${PKCS11_PASSFILE} -t ${TIMESTAMP_URL} -in ${BINARY} -out ${BINARY}.signed
+    osslsigncode -pkcs11engine ${PKCS11_ENGINE} -pkcs11module ${PKCS11_MODULE} -h sha256 -certs ${CERTS} -key ${KEY_ID} -pass ${PKCS11_PASS} -t ${TIMESTAMP_URL} -in ${BINARY} -out ${BINARY}.signed
     mv ${BINARY}.signed ${BINARY}
 }
 [% ELSE %]
@@ -39,6 +44,11 @@ popd
 
 tar -C $distdir -xf [% c('input_files_by_name/nsis') %]
 PATH=$distdir/nsis/bin:$PATH
+[% IF !c('container/use_container') %]
+# nsis build hard-codes its root directory at build-time, so provide soft-link for when
+# running outside a container
+ln -s /var/tmp/${USER} /var/tmp/rbm
+[% END %]
 
 pushd $builddir
 # build installer
@@ -46,6 +56,10 @@ cp -a $distdir/ricochet-refresh/* .
 cp $rootdir/windows/nsis/* .
 
 makensis -DMUI_VERSION="${VERSION}" windows-installer.nsi
+[% IF !c('container/use_container') %]
+# cleanup our soft-link
+rm /var/tmp/rbm
+[% END %]
 # sign installer
 sign_binary ricochet-refresh-installer.exe
 mv ricochet-refresh-installer.exe "$projdir/ricochet-refresh-${VERSION}-windows-${ARCH}-installer.exe"
