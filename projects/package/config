@@ -20,6 +20,8 @@ targets:
         # libs
         - libfontconfig1:i386
         - libfreetype6:i386
+        - libpulse0:i386
+        - libpulse-mainloop-glib0:i386
         - libx11-xcb1:i386
         - libxcb-icccm4:i386
         - libxcb-image0:i386
@@ -43,6 +45,8 @@ targets:
         # libs
         - libfontconfig1
         - libfreetype6
+        - libpulse0
+        - libpulse-mainloop-glib0
         - libx11-xcb1
         - libxcb-icccm4
         - libxcb-image0

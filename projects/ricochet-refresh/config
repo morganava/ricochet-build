@@ -23,6 +23,9 @@ targets:
       arch_deps:
         - libfontconfig1-dev:i386
         - libfreetype6-dev:i386
+        - libglib2.0-dev:i386
+        - libpulse-dev:i386
+        - pulseaudio:i386
         - libxkbcommon-dev:i386
         - libxcb-glx0-dev:i386
         - libxcb-keysyms1-dev:i386
@@ -46,6 +49,9 @@ targets:
       arch_deps:
         - libfontconfig1-dev
         - libfreetype6-dev
+        - libglib2.0-dev
+        - libpulse-dev
+        - pulseaudio
         - libxkbcommon-dev
         - libxcb-glx0-dev
         - libxcb-keysyms1-dev

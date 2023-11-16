@@ -12,6 +12,10 @@ cd $builddir/qt-everywhere-src-[% c('version') %]
 [% IF c("var/linux") %]
   # https://bugreports.qt.io/browse/QTBUG-104264
   patch -p1 < $rootdir/fix_climits.patch
+
+  # explicitly set pkg-config env variables
+  export PKG_CONFIG_SYSROOT_DIR=/.
+  export PKG_CONFIG_LIBDIR="/usr/lib/[% c('var/arch_pkgconfig') %]-linux-gnu/pkgconfig:/usr/share/pkgconfig"
 [% END -%]
 
 [% IF c("var/linux-x86_64") %]
@@ -19,6 +23,7 @@ cd $builddir/qt-everywhere-src-[% c('version') %]
   sed -i "s/X11R6\///g" qtbase/mkspecs/linux-g++-64/qmake.conf
   # /usr/lib64 does not exist in bullseye, so point to the real path
   sed -i "s/lib64/lib\/x86_64-linux-gnu/g" qtbase/mkspecs/linux-g++-64/qmake.conf
+
 [% END -%]
 
 [% IF c("var/windows") -%]

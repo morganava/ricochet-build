@@ -8,13 +8,16 @@ targets:
   linux:
     var:
       cross_compile: $distdir/gcc/bin/x86_64-pc-linux-gnu-
-      configure: -qpa xcb -xcb -xcb-xlib -feature-freetype -fontconfig -skip qtx11extras
+      configure: -qpa xcb -xcb -xcb-xlib -feature-freetype -fontconfig -skip qtx11extras -pulseaudio -pkg-config
   linux-i686:
     var:
+      arch_pkgconfig: i386
       xplatform: linux-g++-32
       deps:
         - libfontconfig1-dev:i386
         - libfreetype6-dev:i386
+        - libpulse-dev:i386
+        - pulseaudio:i386
         - libxkbcommon-dev:i386
         - libxcb-glx0-dev:i386
         - libxcb-keysyms1-dev:i386
@@ -35,10 +38,13 @@ targets:
         - libc6-dev-i386
   linux-x86_64:
     var:
+      arch_pkgconfig: x86_64
       xplatform: linux-g++-64
       deps:
         - libfontconfig1-dev
         - libfreetype6-dev
+        - libpulse-dev
+        - pulseaudio
         - libxkbcommon-dev
         - libxcb-glx0-dev
         - libxcb-keysyms1-dev
