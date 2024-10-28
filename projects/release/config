@@ -33,8 +33,9 @@ input_files:
  - name: linux-aarch64
    project: package
    target_append:
+    - linux-cross
     - linux
-    - linux-x86_64
+    - linux-aarch64
  # macos
  - name: macos-x86_64
    project: package

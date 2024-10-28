@@ -103,6 +103,7 @@ ricochet-release-alpha-sign: submodule-update
 ricochet-linux-testbuild:
 	$(MAKE) ricochet-linux-i686-testbuild
 	$(MAKE) ricochet-linux-x86_64-testbuild
+	$(MAKE) ricochet-linux-aarch64-testbuild
 
 ricochet-linux-i686-testbuild: submodule-update
 	$(rbm) build package --target linux --target linux-i686 --target testbuild
