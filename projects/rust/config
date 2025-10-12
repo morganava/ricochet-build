@@ -1,9 +1,51 @@
-filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
 version: '[% c("var/versions/rust") %]'
+container:
+  use_container: 1
+
+var:
+  deps:
+  - pkg-config
+  - libssl-dev
+
+targets:
+  linux:
+    var:
+      target-triple: '[% c( "var/arch" ) %]-unknown-linux-gnu'
+  linux-i686:
+    var:
+      configure-flags: --set target.i686-unknown-linux-gnu.linker=clang --set target.i686-unknown-linux-gnu.ar=llvm-ar --set target.i686-unknown-linux-gnu.ranlib=llvm-ranlib
+  linux-x86_64:
+  linux-aarch64:
+    var:
+      configure-flags: --set target.aarch64-unknown-linux-gnu.linker=aarch64-linux-gnu-gcc --set target.aarch64-unknown-linux-gnu.ar=llvm-ar --set target.aarch64-unknown-linux-gnu.ranlib=llvm-ranlib
+  windows:
+    var:
+      target-triple: '[% c( "var/arch" ) %]-pc-windows-gnullvm'
+      configure-flags: --set target.[% c( "var/arch" ) %]-pc-windows-gnullvm.linker=[% c( "var/arch" ) %]-w64-mingw32-clang
+  windows-i686:
+  windows-x86_64:
+  macos:
+    var:
+      target-triple: '[% c( "var/compiler_target" ) %]'
+      configure-flags: --set=target.[% c("var/target-triple") %].cc=[% c("var/target-triple") %]-clang
+  macos-aarch64:
+  macos-x86_64:
 
 input_files:
-  - URL: 'https://static.rust-lang.org/dist/rust-[% c("version") %]-x86_64-unknown-linux-gnu.tar.gz'
-    name: rust-installer
+  - project: container-image
+  - name: rust-installer
+    URL: 'https://static.rust-lang.org/dist/rust-[% c("version") %]-x86_64-unknown-linux-gnu.tar.gz'
     sig_ext: asc
     file_gpg_id: 1
     gpg_keyring: rust.gpg
+  - name: rust-src
+    URL: 'https://static.rust-lang.org/dist/rustc-[% c("version") %]-src.tar.gz'
+    sig_ext: asc
+    file_gpg_id: 1
+    gpg_keyring: rust.gpg
+  - name: build-toolchain
+    project: '[% c("var/build-toolchain") %]'
+  - name: clang
+    project: clang
+    enable: '[% c("var/linux") %]'

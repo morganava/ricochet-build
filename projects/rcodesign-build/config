@@ -1,0 +1,19 @@
+# vim: filetype=yaml sw=2
+version: '[% pc("rcodesign", "version") %]'
+git_url: https://github.com/indygreg/apple-platform-rs.git
+git_hash: 'apple-codesign/[% c("version") %]'
+container:
+  use_container: 1
+
+steps:
+  build:
+    filename: '[% project %]-[% c("version") %]-[% c("var/osname") %]-[% c("var/arch") %]-[% c("var/build_id") %].tar.gz'
+    input_files:
+      - project: container-image
+      - name: rust
+        project: rust
+      - name: cargo_vendor
+        project: rcodesign-build
+        pkg_type: cargo_vendor
+        norec:
+          sha256sum: 78846e57ee13ab76f13414d20beb5a4ea106fed36ddddd828b3e775551d13e52

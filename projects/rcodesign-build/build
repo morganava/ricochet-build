@@ -1,0 +1,31 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+
+tar -C $distdir -xf [% c('input_files_by_name/rust') %]
+export PATH=$distdir/rust/bin:$PATH
+
+tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
+tar -C $builddir/[% project %]-[% c('version') %] -xf [% c('input_files_by_name/cargo_vendor') %]
+
+cd $builddir/[% project %]-[% c('version') %]/apple-codesign
+
+mkdir -p .cargo
+cat <<EOF > .cargo/config.toml
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "$builddir/[% project %]-[% c('version') %]/vendor"
+
+[net]
+offline=true
+EOF
+
+mkdir -p $distdir/rcodesign
+cargo install --bin rcodesign --path . --root $distdir/rcodesign
+
+cd $distdir
+[% c('tar', {
+        tar_src => 'rcodesign',
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
