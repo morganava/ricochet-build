@@ -1,0 +1,18 @@
+# vim: filetype=yaml sw=2
+filename: '[% project %]-[% c("version") %]-[% c("var/build_id") %].tar.gz'
+version: '[% c("var/versions/wxWidgets") %]'
+container:
+  use_container: 1
+
+var:
+  deps:
+    - libgtk-3-dev
+
+input_files:
+  - project: container-image
+  - name: build-toolchain
+    project: '[% c("var/build-toolchain") %]'
+  - name: cmake
+    project: cmake
+  - name: wxWidgets-source
+    project: wxWidgets-source

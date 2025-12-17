@@ -1,0 +1,27 @@
+#!/bin/bash
+[% c("var/set_default_env") -%]
+[% pc(c('var/build-toolchain'), 'var/setup', { build_toolchain_tarfile => c('input_files_by_name/build-toolchain') }) %]
+
+# extract dependencies
+tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
+export PATH="$distdir/cmake/bin:$PATH"
+
+# extract wxWidgets source
+tar -C $builddir -xf $rootdir/[% c("input_files_by_name/wxWidgets-source") %]
+cd $builddir/wxWidgets-source
+
+CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=MinSizeRel
+             -DwxBUILD_SHARED=OFF"
+
+cmake -S . ${CMAKE_FLAGS}
+make wxrc
+
+mkdir $projdir/bin
+
+cp lib/wxrc-* $projdir/bin/.
+
+cd $distdir
+[% c('tar', {
+        tar_src => [ project ],
+        tar_args => '-czf ' _ dest_dir _ '/' _ c('filename'),
+    }) %]
