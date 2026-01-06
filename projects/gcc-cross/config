@@ -32,7 +32,7 @@ input_files:
     target_replace:
       '^linux-.*': linux-x86_64
   - URL: 'https://ftp.gnu.org/gnu/glibc/glibc-[% c("var/glibc_version") %].tar.xz'
-    sha256sum: 9246fe44f68feeec8c666bb87973d590ce0137cca145df014c72ec95be9ffd17
+    sha256sum: 1c959fea240906226062cb4b1e7ebce71a9f0e3c0836c09e7e3423d434fcfe75
   - URL: 'https://www.kernel.org/pub/linux/kernel/v5.x/linux-[% c("var/linux_version") %].tar.xz'
     sha256sum: e310588c4b23f0959614e60f007afc20e9b1a8f296d682b041fa129f96fbe151
   - filename: "gcc-cross.patch"
