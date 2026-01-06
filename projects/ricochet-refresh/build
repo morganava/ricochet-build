@@ -10,9 +10,11 @@ tar -C $distdir -xf [% c('input_files_by_name/cmake') %]
 export PATH=$distdir/cmake/bin:$PATH
 
 # extract dependencies
-tar -C $distdir -xf [% c('input_files_by_name/qt') %]
-export PATH=$distdir/qt/bin:$PATH
 tar -C $distdir -xf [% c('input_files_by_name/tor') %]
+[% IF c("var/windows") || c("var/macos") %]
+tar -C $distdir -xf [% c('input_files_by_name/wxWidgets') %]
+export PATH=$distdir/wxWidgets/bin:$PATH
+[% END -%]
 
 # extract source
 tar -C $builddir -xf [% project %]-[% c('version') %].tar.gz
@@ -69,28 +71,18 @@ popd
 [% END -%]
 
 CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=MinSizeRel
-                -DFORCE_QT5=ON
-                -DUSE_SUBMODULE_FMT=ON
-                -DSTATIC_QT_ROOT_DIR=$distdir/qt
-                -DSTATIC_QT=ON
-                -DTEGO_STATIC_BUILD=ON"
+             -DBUILD_QT_FRONTEND=OFF
+             -DBUILD_WX_WIDGETS_FRONTEND=ON"
 
-# # Always enable logging
+CMAKE_FLAGS="-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=TRUE $CMAKE_FLAGS"
+
+# Always enable logging in testbuilds
 [% IF c("var/testbuild") %]
     CMAKE_FLAGS="-DENABLE_RICOCHET_REFRESH_LOGGING=ON $CMAKE_FLAGS"
 [% END -%]
 
-[% IF c("var/pluggable_transports") %]
-    CMAKE_FLAGS="-DENABLE_PLUGGABLE_TRANSPORTS=ON $CMAKE_FLAGS"
-    CMAKE_FLAGS="-DTOR_EXPERT_BUNDLE=$rootdir/[% c('input_files_by_name/tor-expert-bundle') %] $CMAKE_FLAGS"
-[% END -%]
-
-# Set toolchain file
-[% IF c("var/linux-i686") -%]
-    CMAKE_FLAGS="-DCMAKE_TOOLCHAIN_FILE=../src/cmake/toolchains/i386-linux-gnu.cmake $CMAKE_FLAGS"
-[% END -%]
 [% IF c("var/linux-cross") -%]
-    CMAKE_FLAGS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=[% c("var/arch") %] $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_EXE_LINKER_FLAGS=-Wl,-rpath-link=/usr/lib/[% c("var/compiler_target") %] $CMAKE_FLAGS"
 [% END -%]
 [% IF c("var/windows") -%]
     CMAKE_FLAGS="-DCMAKE_SYSTEM_NAME=Windows $CMAKE_FLAGS"
@@ -110,45 +102,33 @@ CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=MinSizeRel
     CMAKE_FLAGS="-DCMAKE_PREFIX_PATH=$distdir/toolchain-windows-clang/[% c('var/compiler_target') -%]/lib/ $CMAKE_FLAGS"
 [% END -%]
 [% IF c("var/macos") -%]
-    # Set AR and RANLIB on macos
-    CMAKE_FLAGS="-DCMAKE_AR=$OSX_AR -DCMAKE_RANLIB=$OSX_RANLIB $CMAKE_FLAGS"
-
-    # CMake doesn't honour the CMAKE_AR and CMAKE_RANLIB vars when checking for
-    # IPO, see https://github.com/emscripten-core/emscripten/issues/11143.
-    # Workaround this by CMAKE_(C|CXX)_COMPILER_(AR|RANLIB)
-    CMAKE_FLAGS="-DCMAKE_C_COMPILER_AR=$OSX_AR -DCMAKE_CXX_COMPILER_AR=$OSX_AR $CMAKE_FLAGS"
-    CMAKE_FLAGS="-DCMAKE_C_COMPILER_RANLIB=$OSX_RANLIB -DCMAKE_CXX_COMPILER_RANLIB=$OSX_RANLIB $CMAKE_FLAGS"
-
-    # Setting CXX in toolchain-macos-clang breaks protoc's build, as it ends up
-    # creating an unusable binary. Instead, toolchain-macos-clang set's it in
-    # OSX_CXX, so as to not conflict with protoc
-    export CXX="$OSX_CXX"
-
-    CMAKE_FLAGS="-DCMAKE_SYSTEM_NAME=Darwin $CMAKE_FLAGS"
-    CMAKE_FLAGS="-DCMAKE_SYSTEM_PROCESSOR=[% c('var/arch') %] $CMAKE_FLAGS"
-    CMAKE_FLAGS="-DCMAKE_C_COMPILER_TARGET=[% c('var/arch') %] $CMAKE_FLAGS"
-    CMAKE_FLAGS="-DCMAKE_CXX_COMPILER_TARGET=[% c('var/compiler_target') %] $CMAKE_FLAGS"
-    CMAKE_FLAGS="-DCMAKE_ASM_COMPILER_TARGET=[% c('var/compiler_target') %] $CMAKE_FLAGS"
     CMAKE_FLAGS="-DCMAKE_PREFIX_PATH=$distdir/toolchain-macos-clang/clang/lib/ $CMAKE_FLAGS"
-    CMAKE_FLAGS="-DCMAKE_FRAMEWORK_PATH=$distdir/toolchain-macos-clang/MacOSX[% pc("toolchain-macos-clang", "version") %].sdk/System/Library/Frameworks $CMAKE_FLAGS"
+    CMAKE_FLAGS="-DCMAKE_SYSTEM_NAME=Darwin $CMAKE_FLAGS"
 [% END -%]
+
+
+# [% IF c("var/pluggable_transports") %]
+#     CMAKE_FLAGS="-DENABLE_PLUGGABLE_TRANSPORTS=ON $CMAKE_FLAGS"
+#     CMAKE_FLAGS="-DTOR_EXPERT_BUNDLE=$rootdir/[% c('input_files_by_name/tor-expert-bundle') %] $CMAKE_FLAGS"
+# [% END -%]
+
 CMAKE_FLAGS="-DCMAKE_INSTALL_PREFIX=$distdir/ricochet-refresh-dist $CMAKE_FLAGS"
 
 mkdir build && cd build
 export SOURCE_DATE_EPOCH='[% c("timestamp") %]'
-RICOCHET_REFRESH_VERSION=[% c('version') %] cmake -S ../src $CMAKE_FLAGS '-DCARGO_FLAGS=[% pc('rust', 'var/cargo-flags') %]'
+RICOCHET_REFRESH_VERSION=[% c('version') %] cmake -S ../src --trace-expand $CMAKE_FLAGS '-DCARGO_FLAGS=[% pc('rust', 'var/cargo-flags') %]'
 
-cmake --build . -j[% c('num_procs') %]
+cmake --build . -j[% c('num_procs') %] --verbose
 cmake --install .
 
 bindir=$projdir
 
 mv $distdir/ricochet-refresh-dist/bin/* $projdir
 
-[% IF c("var/pluggable_transports") -%]
-# remove extraneous non-executable files
-find $bindir/pluggable_transports -type f ! -executable -exec rm {} \;
-[% END -%]
+# [% IF c("var/pluggable_transports") -%]
+# # remove extraneous non-executable files
+# find $bindir/pluggable_transports -type f ! -executable -exec rm {} \;
+# [% END -%]
 
 # tor
 cp $distdir/tor/bin/tor[% IF c("var/windows") %].exe[% END %] $bindir/.
