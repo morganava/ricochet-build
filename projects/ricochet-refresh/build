@@ -37,20 +37,6 @@ offline=true
 EOF
 popd
 
-pushd src/ricochet-refresh-qt
-mkdir -p .cargo
-cat <<EOF > .cargo/config.toml
-[source.crates-io]
-replace-with = "vendored-sources"
-
-[source.vendored-sources]
-directory = "../vendor/ricochet-refresh-qt"
-
-[net]
-offline=true
-EOF
-popd
-
 # generate src tar
 pushd $builddir
 [% c('tar', {
@@ -71,7 +57,6 @@ popd
 [% END -%]
 
 CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=MinSizeRel
-             -DBUILD_QT_FRONTEND=OFF
              -DBUILD_WX_WIDGETS_FRONTEND=ON"
 
 CMAKE_FLAGS="-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=TRUE $CMAKE_FLAGS"
